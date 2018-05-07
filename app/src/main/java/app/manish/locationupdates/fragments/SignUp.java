@@ -53,7 +53,7 @@ public class SignUp extends Fragment implements View.OnClickListener {
                 listener.changeFragment();
                 break;
             case R.id.already_user:
-                if (b_already_user.getText().toString().equalsIgnoreCase("Register")) {
+                if (b_already_user.getText().toString().equalsIgnoreCase(getString(R.string.register))) {
                     b_already_user.setText(R.string.alreay_user);
                     b_register.setText(R.string.login);
                 } else {

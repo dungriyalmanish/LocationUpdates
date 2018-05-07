@@ -3,4 +3,6 @@
     <string name="alreay_user">Already a user !</string>
     <string name="register">Register</string>
     <string name="login">Login</string>
+    <string name="otp_get_button">Get OTP</string>
+    <string name="otp_verify_button">Verify</string>
 </resources>

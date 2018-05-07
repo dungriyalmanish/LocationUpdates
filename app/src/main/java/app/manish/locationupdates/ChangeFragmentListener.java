@@ -5,5 +5,5 @@ package app.manish.locationupdates;
  */
 
 public interface ChangeFragmentListener {
-    public void changeFragment();
+    void changeFragment();
 }
