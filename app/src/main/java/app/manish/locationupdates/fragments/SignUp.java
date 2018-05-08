@@ -10,8 +10,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import app.manish.locationupdates.ChangeFragmentListener;
 import app.manish.locationupdates.R;
+import app.manish.locationupdates.connect.AllEventListener;
+import app.manish.locationupdates.connect.IEventListener;
+import app.manish.locationupdates.view.IView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,12 +26,12 @@ public class SignUp extends Fragment implements View.OnClickListener {
     public SignUp() {
     }
 
-    ChangeFragmentListener listener;
+    IEventListener listener;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        listener = (ChangeFragmentListener) context;
+        listener = new AllEventListener((IView) context);
     }
 
     @Override
@@ -50,7 +52,7 @@ public class SignUp extends Fragment implements View.OnClickListener {
         int id = v.getId();
         switch (id) {
             case R.id.register:
-                listener.changeFragment();
+                listener.changeFragment(new PhoneVerify());
                 break;
             case R.id.already_user:
                 if (b_already_user.getText().toString().equalsIgnoreCase(getString(R.string.register))) {
