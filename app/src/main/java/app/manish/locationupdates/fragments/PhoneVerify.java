@@ -1,6 +1,8 @@
 package app.manish.locationupdates.fragments;
 
 
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,9 +14,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import app.manish.locationupdates.R;
+import app.manish.locationupdates.connect.IPhoneListener;
+import app.manish.locationupdates.connect.PhoneConnector;
 import app.manish.locationupdates.view.IPhoneView;
-
-import static app.manish.locationupdates.MainActivity.mEventListener;
+import app.manish.locationupdates.view.IView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,13 +28,18 @@ public class PhoneVerify extends Fragment implements IPhoneView {
     EditText number, otp;
     Button b_otp;
     Context mContext;
+    IPhoneListener phoneListener;
+    IView iView;
+
     public PhoneVerify() {
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.mContext=context;
+        this.mContext = context;
+        iView = (IView) mContext;
+        phoneListener = new PhoneConnector(this);
     }
 
     @Override
@@ -45,10 +53,10 @@ public class PhoneVerify extends Fragment implements IPhoneView {
             @Override
             public void onClick(View v) {
                 if (b_otp.getText().toString().equalsIgnoreCase(getString(R.string.otp_get_button))) {
-                    mEventListener.verifyMobile((number.getText() != null) ? number.getText().toString() : "");
-                    otp.setVisibility(View.VISIBLE);
-                    b_otp.setText(R.string.otp_verify_button);
-
+                    number.setEnabled(false);
+                    phoneListener.verifyPhone((number.getText() != null) ? number.getText().toString() : "");
+                } else {
+                    phoneListener.verfiyOtp((otp.getText() != null) ? otp.getText().toString() : "");
                 }
             }
         });
@@ -56,22 +64,27 @@ public class PhoneVerify extends Fragment implements IPhoneView {
     }
 
     @Override
-    public void validationSuccess() {
-        Toast.makeText(mContext,"Phone Verification Success !! ",Toast.LENGTH_SHORT).show();
+    public void mobileNumberValidationSuccess() {
+        Toast.makeText(mContext, "OTP is sent to your device", Toast.LENGTH_SHORT).show();
+        AnimatorSet animatorSet = (AnimatorSet) AnimatorInflater.loadAnimator(getContext(), R.animator.fade_in_edittext);
+        animatorSet.start();
+        otp.setVisibility(View.VISIBLE);
+        b_otp.setText(R.string.otp_verify_button);
     }
 
     @Override
-    public void validationFailed() {
-        Toast.makeText(mContext,"Phone Verification Failed !! ",Toast.LENGTH_SHORT).show();
+    public void mobileNumberValidationFailed(String reason) {
+        Toast.makeText(mContext, "Mobile validation failed. Reason: " + reason, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void incorrectMobileNumber(String reason) {
-        Toast.makeText(mContext,"Incorrect Mobile Number !",Toast.LENGTH_SHORT).show();
+    public void otpVerificationSuccess() {
+        Toast.makeText(mContext, "OTP Verification Success !! ", Toast.LENGTH_SHORT).show();
+        iView.updateFragment(new SignUp());
     }
 
     @Override
-    public void incorrectOtp() {
-        Toast.makeText(mContext,"Incorrect OTP !",Toast.LENGTH_SHORT).show();
+    public void otpVerificationFailed() {
+        Toast.makeText(mContext, "Incorrect OTP !", Toast.LENGTH_SHORT).show();
     }
 }

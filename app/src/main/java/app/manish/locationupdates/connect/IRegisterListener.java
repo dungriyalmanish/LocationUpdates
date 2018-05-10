@@ -5,8 +5,9 @@ package app.manish.locationupdates.connect;
  */
 
 public interface IRegisterListener {
-    void tryLogin();
-    void tryRegister();
+    void tryLogin(String username, String password);
+
+    void tryRegister(String username, String password);
 
 
 }

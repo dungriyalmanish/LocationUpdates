@@ -6,7 +6,6 @@ package app.manish.locationupdates.view;
 
 public interface ISignUpView {
     void missingData(String data);
-    void changeToPhone();
     void loginFailed(String reason);
     void registerFailed(String reason);
 }

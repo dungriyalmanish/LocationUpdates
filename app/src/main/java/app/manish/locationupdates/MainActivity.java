@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements IView {
         fragment = new SignUp();
         mEventListener = new AllEventListener(this);
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        mEventListener.changeFragment(new SignUp());
+        mEventListener.changeFragment(new PhoneVerify());
     }
 
     @Override

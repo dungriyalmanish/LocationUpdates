@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import app.manish.locationupdates.R;
 import app.manish.locationupdates.connect.IRegisterListener;
+import app.manish.locationupdates.connect.RegisterListener;
 import app.manish.locationupdates.view.ISignUpView;
 import app.manish.locationupdates.view.IView;
 
@@ -34,7 +35,7 @@ public class SignUp extends Fragment implements View.OnClickListener, ISignUpVie
     public void onAttach(Context context) {
         super.onAttach(context);
         iView = (IView) context;
-        registerListener = (IRegisterListener) this;
+        registerListener = new RegisterListener(this);
     }
 
     @Override
@@ -55,16 +56,18 @@ public class SignUp extends Fragment implements View.OnClickListener, ISignUpVie
         int id = v.getId();
         switch (id) {
             case R.id.register:
+                String user = name.getText().toString();
+                String pass = password.getText().toString();
                 if (isUser) {
-                    registerListener.tryLogin();
+                    registerListener.tryLogin(user, pass);
                 } else {
-                    registerListener.tryRegister();
+                    registerListener.tryRegister(user, pass);
                 }
                 break;
             case R.id.already_user:
                 if (b_already_user.getText().toString().equalsIgnoreCase(getString(R.string.register))) {
                     b_already_user.setText(R.string.alreay_user);
-                    b_register.setText(R.string.login);
+                    b_register.setText(R.string.register);
                     isUser = false;
                 } else {
                     b_already_user.setText(R.string.register);
@@ -78,11 +81,6 @@ public class SignUp extends Fragment implements View.OnClickListener, ISignUpVie
     @Override
     public void missingData(String data) {
         Toast.makeText(getContext(), "Please fill: " + data, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void changeToPhone() {
-        iView.updateFragment(new PhoneVerify());
     }
 
     @Override

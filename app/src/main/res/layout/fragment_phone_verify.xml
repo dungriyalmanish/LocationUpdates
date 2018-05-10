@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     tools:context=".fragments.PhoneVerify">
 
 
@@ -19,6 +20,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="phone"
+        android:hint="Mobile Number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -26,7 +28,7 @@
 
     <EditText
         android:id="@+id/otp"
-        android:layout_width="wrap_content"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:ems="10"
