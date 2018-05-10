@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity implements IView {
 
     Fragment fragment;
     FragmentTransaction fragmentTransaction;
-    IEventListener mEventListener;
+    public static IEventListener mEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

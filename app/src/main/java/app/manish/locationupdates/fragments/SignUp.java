@@ -9,29 +9,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import app.manish.locationupdates.R;
-import app.manish.locationupdates.connect.AllEventListener;
-import app.manish.locationupdates.connect.IEventListener;
+import app.manish.locationupdates.connect.IRegisterListener;
+import app.manish.locationupdates.view.ISignUpView;
 import app.manish.locationupdates.view.IView;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SignUp extends Fragment implements View.OnClickListener {
+public class SignUp extends Fragment implements View.OnClickListener, ISignUpView {
 
     Button b_register, b_already_user;
     EditText name, password;
+    boolean isUser = false;
+    IRegisterListener registerListener;
+    IView iView;
 
     public SignUp() {
     }
 
-    IEventListener listener;
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        listener = new AllEventListener((IView) context);
+        iView = (IView) context;
+        registerListener = (IRegisterListener) this;
     }
 
     @Override
@@ -52,17 +55,43 @@ public class SignUp extends Fragment implements View.OnClickListener {
         int id = v.getId();
         switch (id) {
             case R.id.register:
-                listener.changeFragment(new PhoneVerify());
+                if (isUser) {
+                    registerListener.tryLogin();
+                } else {
+                    registerListener.tryRegister();
+                }
                 break;
             case R.id.already_user:
                 if (b_already_user.getText().toString().equalsIgnoreCase(getString(R.string.register))) {
                     b_already_user.setText(R.string.alreay_user);
                     b_register.setText(R.string.login);
+                    isUser = false;
                 } else {
                     b_already_user.setText(R.string.register);
                     b_register.setText(R.string.login);
+                    isUser = true;
                 }
                 break;
         }
+    }
+
+    @Override
+    public void missingData(String data) {
+        Toast.makeText(getContext(), "Please fill: " + data, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void changeToPhone() {
+        iView.updateFragment(new PhoneVerify());
+    }
+
+    @Override
+    public void loginFailed(String reason) {
+        Toast.makeText(getContext(), "Login Failed: " + reason, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void registerFailed(String reason) {
+        Toast.makeText(getContext(), "Register Failed: " + reason, Toast.LENGTH_SHORT).show();
     }
 }

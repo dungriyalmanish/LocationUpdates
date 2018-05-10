@@ -1,6 +1,7 @@
 package app.manish.locationupdates.fragments;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,21 +12,27 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import app.manish.locationupdates.R;
+import app.manish.locationupdates.view.IPhoneView;
+
+import static app.manish.locationupdates.MainActivity.mEventListener;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PhoneVerify extends Fragment {
+public class PhoneVerify extends Fragment implements IPhoneView {
 
 
     EditText number, otp;
     Button b_otp;
-    String mob_number = "";
-
+    Context mContext;
     public PhoneVerify() {
-
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.mContext=context;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,34 +45,33 @@ public class PhoneVerify extends Fragment {
             @Override
             public void onClick(View v) {
                 if (b_otp.getText().toString().equalsIgnoreCase(getString(R.string.otp_get_button))) {
-                    if (isValidNumber()) {
-                        otp.setVisibility(View.VISIBLE);
-                        b_otp.setText(R.string.otp_verify_button);
-                        Toast.makeText(getContext(), "OTP sent to mobile", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getContext(), "Incorrect Mobile Number !", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    if(isValidOTP())
-                    Toast.makeText(getContext(), "OTP verified", Toast.LENGTH_SHORT).show();
+                    mEventListener.verifyMobile((number.getText() != null) ? number.getText().toString() : "");
+                    otp.setVisibility(View.VISIBLE);
+                    b_otp.setText(R.string.otp_verify_button);
+
                 }
             }
         });
-
         return v;
     }
 
-    private boolean isValidOTP() {
-        return true;
+    @Override
+    public void validationSuccess() {
+        Toast.makeText(mContext,"Phone Verification Success !! ",Toast.LENGTH_SHORT).show();
     }
 
-    private boolean isValidNumber() {
-        mob_number = (number.getText() != null) ? number.getText().toString() : "";
-        if (!mob_number.isEmpty() && mob_number.length() == 10 && mob_number.matches("^[0-9]*$")) {
-            return true;
-        }
-        return false;
+    @Override
+    public void validationFailed() {
+        Toast.makeText(mContext,"Phone Verification Failed !! ",Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void incorrectMobileNumber(String reason) {
+        Toast.makeText(mContext,"Incorrect Mobile Number !",Toast.LENGTH_SHORT).show();
+    }
 
+    @Override
+    public void incorrectOtp() {
+        Toast.makeText(mContext,"Incorrect OTP !",Toast.LENGTH_SHORT).show();
+    }
 }
