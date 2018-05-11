@@ -92,4 +92,9 @@ public class SignUp extends Fragment implements View.OnClickListener, ISignUpVie
     public void registerFailed(String reason) {
         Toast.makeText(getContext(), "Register Failed: " + reason, Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void registerSuccess() {
+        iView.moveToHome();
+    }
 }

@@ -8,4 +8,5 @@ public interface ISignUpView {
     void missingData(String data);
     void loginFailed(String reason);
     void registerFailed(String reason);
+    void registerSuccess();
 }

@@ -4,4 +4,6 @@ import android.support.v4.app.Fragment;
 
 public interface IView {
     void updateFragment(Fragment fragment);
+    void moveToHome();
 }
+

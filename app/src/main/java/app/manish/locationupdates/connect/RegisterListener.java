@@ -25,11 +25,18 @@ public class RegisterListener implements IRegisterListener {
             result = mDataManager.loginUsingCredentials(username, password);
         }
         if (result != null && result.equals(DataConstants.LOGIN_SUCCESS)) {
+            mSignUp.registerSuccess();
         }
     }
 
     @Override
     public void tryRegister(String username, String password) {
-
+        String result = null;
+        if (mDataManager.isValidCredentials(username, password)) {
+            result = mDataManager.loginUsingCredentials(username, password);
+        }
+        if (result != null && result.equals(DataConstants.LOGIN_SUCCESS)) {
+            mSignUp.registerSuccess();
+        }
     }
 }

@@ -16,9 +16,4 @@ public class AllEventListener implements IEventListener {
     public void changeFragment(Fragment fragment) {
         mIview.updateFragment(fragment);
     }
-
-    @Override
-    public void verifyMobile(String mobileNumber) {
-
-    }
 }

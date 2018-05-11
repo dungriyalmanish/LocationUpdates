@@ -1,5 +1,6 @@
 package app.manish.locationupdates;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -33,5 +34,11 @@ public class MainActivity extends AppCompatActivity implements IView {
             fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment, fragment).commit();
         }
+    }
+
+    @Override
+    public void moveToHome() {
+        Intent i = new Intent(this,HomePage.class);
+        startActivity(i);
     }
 }
