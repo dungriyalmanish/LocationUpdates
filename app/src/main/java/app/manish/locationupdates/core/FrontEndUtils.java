@@ -1,5 +1,7 @@
 package app.manish.locationupdates.core;
 
+import java.util.UUID;
+
 /**
  * Created by manish.dungriyal on 10-05-2018.
  */
@@ -10,5 +12,9 @@ public  class FrontEndUtils {
             return true;
         }
         return false;
+    }
+
+    public static String getId(){
+        return UUID.randomUUID().toString();
     }
 }
