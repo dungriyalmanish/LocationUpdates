@@ -7,5 +7,6 @@ import android.content.Context;
  */
 
 public interface ISplashWorker {
-    void checkUserExistance();
+    void checkUserExistence();
+    void phoneVerified(boolean isVarified);
 }

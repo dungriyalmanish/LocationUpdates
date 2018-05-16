@@ -7,7 +7,9 @@ package app.manish.locationupdates.view;
 public interface IPhoneView {
 
     void otpVerificationSuccess();
-    void otpVerificationFailed();
+    void otpVerificationFailed(String message);
     void mobileNumberValidationFailed(String reason);
     void mobileNumberValidationSuccess();
+
+    void showOtpStatus(String otpStatus);
 }

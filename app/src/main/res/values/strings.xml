@@ -1,4 +1,5 @@
 <resources>
+    <string name="key">AIzaSyBAsnR6OHnabMGX6rYaJ5KM7G5lNYFOKbk</string>
     <string name="app_name">LocationUpdates</string>
     <string name="alreay_user">Already a user !</string>
     <string name="register">Register</string>

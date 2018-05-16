@@ -1,10 +1,10 @@
 package app.manish.locationupdates.connect;
 
 import android.content.Context;
-
-import java.util.UUID;
+import android.util.Log;
 
 import app.manish.locationupdates.core.DataManager;
+import app.manish.locationupdates.core.UserInformation;
 import app.manish.locationupdates.view.ISplashVIew;
 
 /**
@@ -12,17 +12,35 @@ import app.manish.locationupdates.view.ISplashVIew;
  */
 
 public class SplashConnector implements ISplashWorker {
+    private static final String TAG = "SplashConnector";
     ISplashVIew mSV;
     DataManager mDM;
+    Context mContext;
 
-    public SplashConnector(ISplashVIew iSplashVIew) {
-        mSV = iSplashVIew;
-        mDM = new DataManager(this);
+    public SplashConnector(Context context) {
+        mSV = (ISplashVIew) context;
+        mContext = context;
+        mDM = new DataManager(this, mContext);
     }
 
     @Override
-    public void checkUserExistance() {
+    public void checkUserExistence() {
+        Log.v(TAG, "checkUserExistance");
         boolean loggedIn = mDM.isAlreadyLoggedIn();
-        mSV.skipRegistration(true);
+        if (loggedIn) {
+            UserInformation userInformation = mDM.getUserDetails();
+            mSV.skipRegistration(true, userInformation);
+        } else {
+            mSV.skipRegistration(false, null);
+        }
+
+    }
+
+    @Override
+    public void phoneVerified(boolean isVarified) {
+        if (isVarified) {
+
+        } else {
+        }
     }
 }

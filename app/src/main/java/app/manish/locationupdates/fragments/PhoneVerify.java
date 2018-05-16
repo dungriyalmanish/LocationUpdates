@@ -39,7 +39,7 @@ public class PhoneVerify extends Fragment implements IPhoneView {
         super.onAttach(context);
         this.mContext = context;
         iView = (IView) mContext;
-        phoneListener = new PhoneConnector(this);
+        phoneListener = new PhoneConnector(this, mContext);
     }
 
     @Override
@@ -53,7 +53,6 @@ public class PhoneVerify extends Fragment implements IPhoneView {
             @Override
             public void onClick(View v) {
                 if (b_otp.getText().toString().equalsIgnoreCase(getString(R.string.otp_get_button))) {
-                    number.setEnabled(false);
                     phoneListener.verifyPhone((number.getText() != null) ? number.getText().toString() : "");
                 } else {
                     phoneListener.verfiyOtp((otp.getText() != null) ? otp.getText().toString() : "");
@@ -65,11 +64,17 @@ public class PhoneVerify extends Fragment implements IPhoneView {
 
     @Override
     public void mobileNumberValidationSuccess() {
-        Toast.makeText(mContext, "OTP is sent to your device", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(mContext, "OTP is sent to your device", Toast.LENGTH_SHORT).show();
         AnimatorSet animatorSet = (AnimatorSet) AnimatorInflater.loadAnimator(getContext(), R.animator.fade_in_edittext);
         animatorSet.start();
         otp.setVisibility(View.VISIBLE);
+        number.setEnabled(false);
         b_otp.setText(R.string.otp_verify_button);
+    }
+
+    @Override
+    public void showOtpStatus(String otpStatus) {
+        Toast.makeText(mContext, otpStatus, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -84,7 +89,7 @@ public class PhoneVerify extends Fragment implements IPhoneView {
     }
 
     @Override
-    public void otpVerificationFailed() {
-        Toast.makeText(mContext, "Incorrect OTP !", Toast.LENGTH_SHORT).show();
+    public void otpVerificationFailed(String message) {
+        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
     }
 }

@@ -1,10 +1,8 @@
 package app.manish.locationupdates;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,12 +11,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import app.manish.locationupdates.connect.HomeConnector;
 import app.manish.locationupdates.connect.IHomeListener;
@@ -43,6 +38,7 @@ public class HomePage extends AppCompatActivity implements IHomeView, OnMapReady
         navigationView.setNavigationItemSelectedListener(mHL);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id._map);
         mapFragment.getMapAsync(this);
+
     }
 
     @Override
