@@ -20,7 +20,7 @@ public class PhoneConnector implements IPhoneListener {
     DataManager mDM;
     IPhoneView mPhoneView;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks phoneAuthCallback;
-    String verificationID;
+    String verificationID = "none";
 
     public PhoneConnector(IPhoneView iPhoneView, Context context) {
         mPhoneView = iPhoneView;
@@ -41,6 +41,7 @@ public class PhoneConnector implements IPhoneListener {
             @Override
             public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 super.onCodeSent(s, forceResendingToken);
+                mPhoneView.hideDialog();
                 mPhoneView.showOtpStatus(DataConstants.CODE_SENT);
                 Log.v(TAG, "OTP sent to mobile");
                 verificationID = s;
@@ -50,20 +51,26 @@ public class PhoneConnector implements IPhoneListener {
 
     @Override
     public void verifyPhone(String number) {
+        mPhoneView.showDialog("Verifying phone...");
         if (mDM.isValidNumber(number)) {
             mPhoneView.mobileNumberValidationSuccess();
+            mPhoneView.hideDialog();
+            mPhoneView.showDialog("Sending OTP...");
             mDM.sendOtpToDevice(number, phoneAuthCallback);
         } else {
+            mPhoneView.hideDialog();
             mPhoneView.mobileNumberValidationFailed(DataConstants.INVALID_NUMBER);
         }
     }
 
     @Override
-    public void verfiyOtp(String otp) {
-        if (!otp.isEmpty()) {
+    public void verifyOtp(String otp) {
+        mPhoneView.showDialog("Verifying OTP");
+        if (mDM.isValidOtp(otp)) {
             PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationID, otp);
             mDM.signInUsingCredentials(credential);
         } else {
+            mPhoneView.hideDialog();
             mPhoneView.otpVerificationFailed("Enter OTP first");
         }
     }
@@ -71,8 +78,10 @@ public class PhoneConnector implements IPhoneListener {
     @Override
     public void phoneVerified(boolean isVerified) {
         if (isVerified) {
+            mPhoneView.hideDialog();
             mPhoneView.otpVerificationSuccess();
         } else {
+            mPhoneView.hideDialog();
             mPhoneView.otpVerificationFailed(DataConstants.INVALID_OTP);
         }
     }

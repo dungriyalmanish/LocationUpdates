@@ -2,7 +2,6 @@ package app.manish.locationupdates.core;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.firebase.auth.PhoneAuthCredential;
@@ -24,28 +23,23 @@ public class DataManager {
     IRegisterListener mRL;
     IPhoneListener mPL;
     ISplashWorker mSW;
-    private boolean alreadyLoggedIn;
+    UserInformation userInformation;
     Context mContext;
-    SharedPreferences sharedPreferences;
     String userKey;
     FirebaseHandler firebaseHandler;
+    SharedPreferenceManager sharedPreferenceManager;
 
-
-    public DataManager(IRegisterListener registerListener) {
-        mRL = registerListener;
-    }
-
-    /*public DataManager(IPhoneListener phoneListener, Context context) {
-        mPL = phoneListener;
-    }*/
-
-    public DataManager(Object object, Context context) {
+    public <T> DataManager(T object, Context context) {
+        Log.v(TAG, "object instance of IPhoneListener:" + (object instanceof IPhoneListener));
+        Log.v(TAG, "object instance of IRegisterListener:" + (object instanceof IRegisterListener));
         if (object instanceof IPhoneListener) {
             mPL = (IPhoneListener) object;
+        } else if (object instanceof IRegisterListener) {
+            mRL = (IRegisterListener) object;
         }
         //mSW = sw;
         mContext = context;
-        sharedPreferences = mContext.getSharedPreferences(DataConstants.SHARED_PREF, Context.MODE_PRIVATE);
+        sharedPreferenceManager = new SharedPreferenceManager(mContext);
         firebaseHandler = new FirebaseHandler(mContext, this);
     }
 
@@ -53,7 +47,8 @@ public class DataManager {
         return true;
     }
 
-    public String loginUsingCredentials(String username, String password) {
+    public String saveUserData(UserInformation userInformation) {
+        firebaseHandler.updateDetails(userInformation);
         return DataConstants.LOGIN_SUCCESS;
     }
 
@@ -63,29 +58,23 @@ public class DataManager {
 
 
     public boolean isAlreadyLoggedIn() {
-        userKey = sharedPreferences.getString(DataConstants.USER_ID, "");
-        if (!userKey.isEmpty()) {
+        userInformation = sharedPreferenceManager.getUserData();
+        if (userInformation != null) {
             return true;
         }
         return false;
     }
 
     public UserInformation getUserDetails() {
-        String name = "", phone = "";
         UserInformation userInformation;
         if (FrontEndUtils.isInternetConnected(mContext)) {
             userInformation = firebaseHandler.getUserInformation(userKey);
         } else {
-            name = sharedPreferences.getString(DataConstants.USER_NAME, "");
-            phone = sharedPreferences.getString(DataConstants.USER_PHONE, "");
-            userInformation = new UserInformation(name, phone);
+            userInformation = sharedPreferenceManager.getUserData();
         }
         return userInformation;
     }
 
-    public void setAlreadyLoggedIn(boolean alreadyLoggedIn) {
-        this.alreadyLoggedIn = alreadyLoggedIn;
-    }
 
     public void sendOtpToDevice(String number, PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks) {
         String phone = "+91" + number;
@@ -100,5 +89,9 @@ public class DataManager {
     public void phoneVerified(boolean isVarified) {
         mPL.phoneVerified(isVarified);
 
+    }
+
+    public boolean isValidOtp(String otp) {
+        return FrontEndUtils.isValidOtp(otp);
     }
 }

@@ -20,4 +20,13 @@ public class DataConstants {
 
     //intent actions: broadcastreceiver
     public static final String INTERNET_CONNECTED = "internet_connected";
+
+    //firebaseConstants
+    public static final String USERS = "users";
+
+    //broadcast receivers actions
+    public static final String UPDATE_SHAREDPREF = "update_shared_pref";
+    public static final String SHOW_PROGRESS_DIALOG = "show_progress_dialog";
+    public static final String PROGRESS_DATA = "progress_data";
+    public static final String HIDE_PROGRESS_DIALOG = "hide_dialog";
 }

@@ -5,8 +5,12 @@ package app.manish.locationupdates.view;
  */
 
 public interface ISignUpView {
-    void missingData(String data);
-    void loginFailed(String reason);
+
     void registerFailed(String reason);
+
     void registerSuccess();
+
+    void showDialog(String message);
+
+    void hideDialog();
 }

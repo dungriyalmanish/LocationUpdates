@@ -6,6 +6,6 @@ package app.manish.locationupdates.connect;
 
 public interface IPhoneListener {
     void verifyPhone(String number);
-    void verfiyOtp(String otp);
+    void verifyOtp(String otp);
     void phoneVerified(boolean isVerified);
 }

@@ -2,6 +2,7 @@ package app.manish.locationupdates.fragments;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,6 +15,8 @@ import android.widget.Toast;
 import app.manish.locationupdates.R;
 import app.manish.locationupdates.connect.IRegisterListener;
 import app.manish.locationupdates.connect.RegisterListener;
+import app.manish.locationupdates.constants.DataConstants;
+import app.manish.locationupdates.core.UserInformation;
 import app.manish.locationupdates.view.ISignUpView;
 import app.manish.locationupdates.view.IView;
 
@@ -24,9 +27,10 @@ public class SignUp extends Fragment implements View.OnClickListener, ISignUpVie
 
     Button b_register, b_already_user;
     EditText name, password;
-    boolean isUser = false;
     IRegisterListener registerListener;
     IView iView;
+    UserInformation mUI;
+    Context mContext;
 
     public SignUp() {
     }
@@ -35,7 +39,8 @@ public class SignUp extends Fragment implements View.OnClickListener, ISignUpVie
     public void onAttach(Context context) {
         super.onAttach(context);
         iView = (IView) context;
-        registerListener = new RegisterListener(this);
+        mContext = context;
+        registerListener = new RegisterListener(this, mContext);
     }
 
     @Override
@@ -48,6 +53,8 @@ public class SignUp extends Fragment implements View.OnClickListener, ISignUpVie
         password = v.findViewById(R.id.password);
         b_register.setOnClickListener(this);
         b_already_user.setOnClickListener(this);
+        mUI = new UserInformation();
+        mUI.setPhone(getArguments().getString(DataConstants.USER_INFO, "null"));
         return v;
     }
 
@@ -58,43 +65,31 @@ public class SignUp extends Fragment implements View.OnClickListener, ISignUpVie
             case R.id.register:
                 String user = name.getText().toString();
                 String pass = password.getText().toString();
-                if (isUser) {
-                    registerListener.tryLogin(user, pass);
-                } else {
-                    registerListener.tryRegister(user, pass);
-                }
-                break;
-            case R.id.already_user:
-                if (b_already_user.getText().toString().equalsIgnoreCase(getString(R.string.register))) {
-                    b_already_user.setText(R.string.alreay_user);
-                    b_register.setText(R.string.register);
-                    isUser = false;
-                } else {
-                    b_already_user.setText(R.string.register);
-                    b_register.setText(R.string.login);
-                    isUser = true;
-                }
+                mUI.setName(user);
+                mUI.setPassword(pass);
+                registerListener.register(mUI);
                 break;
         }
     }
 
     @Override
-    public void missingData(String data) {
-        Toast.makeText(getContext(), "Please fill: " + data, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void loginFailed(String reason) {
-        Toast.makeText(getContext(), "Login Failed: " + reason, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void registerFailed(String reason) {
         Toast.makeText(getContext(), "Register Failed: " + reason, Toast.LENGTH_SHORT).show();
+        hideDialog();
     }
 
     @Override
     public void registerSuccess() {
         iView.moveToHome();
+    }
+
+    @Override
+    public void showDialog(String message) {
+        mContext.sendBroadcast(new Intent(DataConstants.SHOW_PROGRESS_DIALOG).putExtra(DataConstants.PROGRESS_DATA, message));
+    }
+
+    @Override
+    public void hideDialog() {
+        mContext.sendBroadcast(new Intent(DataConstants.HIDE_PROGRESS_DIALOG));
     }
 }

@@ -7,11 +7,16 @@ import java.io.Serializable;
  */
 
 public class UserInformation implements Serializable {
-    String name, phone;
+    String name, phone, password;
 
-    public UserInformation(String name, String phone) {
+    public UserInformation() {
+
+    }
+
+    public UserInformation(String name, String password, String phone) {
         this.name = name;
         this.phone = phone;
+        this.password = password;
     }
 
     public String getName() {
@@ -28,5 +33,13 @@ public class UserInformation implements Serializable {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

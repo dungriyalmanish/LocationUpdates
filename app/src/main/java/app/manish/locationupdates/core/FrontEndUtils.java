@@ -1,7 +1,6 @@
 package app.manish.locationupdates.core;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
@@ -28,5 +27,9 @@ public class FrontEndUtils {
         if (networkInfo != null) return networkInfo.isConnectedOrConnecting();
         else return false;
 
+    }
+
+    public static boolean isValidOtp(String otp) {
+        return !otp.isEmpty();
     }
 }
